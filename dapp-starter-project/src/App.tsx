@@ -1,24 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="mainContainer">
+      <div className="dataContainer">
+        <div className="header">
+          <span role="img" aria-label="hand-wave">
+            👋
+          </span>{" "}
+          WELCOME!
+        </div>
+
+        <div className="bio">
+          イーサリアムウォレットを接続して、メッセージを作成したら、
+          <span role="img" aria-label="hand-wave">
+            👋
+          </span>
+          を送ってください
+          <span role="img" aria-label="shine">
+            ✨
+          </span>
+        </div>
+
+        {/* <button className="waveButton" onClick={wave}>
+          Wave at Me
+        </button> */}
+        <button className="waveButton">Wave at Me</button>
+      </div>
     </div>
   );
 }
