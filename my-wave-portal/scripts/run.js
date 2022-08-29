@@ -1,37 +1,28 @@
 const main = async () => {
-  const [owner, randomPerson] = await hre.ethers.getSigners();
-  // const [owner, randomPerson1, randomPerson2] = await hre.ethers.getSigners();
   const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
   const waveContract = await waveContractFactory.deploy();
-  const wavePortal = await waveContract.deployed();
-
-  console.log("Contract deployed to:", wavePortal.address);
-  console.log("Contract deployed by:", owner.address);
-
+  console.log("Contract added to:", waveContract.address);
   let waveCount;
   waveCount = await waveContract.getTotalWaves();
-
-  let waveTxn = await waveContract.wave();
-  // .wait()とすることで取引の承認を待つ
-  await waveTxn.wait();
-
-  waveCount = await waveContract.getTotalWaves();
-
-  // .connect(randomPerson)で他のユーザーにwaveを送った状態をシミュレーションしている
-  waveTxn = await waveContract.connect(randomPerson).wave();
-  await waveTxn.wait();
-
-  waveCount = await waveContract.getTotalWaves();
-}
-
+  console.log(waveCount.toNumber());
+  /**
+   * 「👋（wave）」を送る
+   */
+  let waveTxn = await waveContract.wave("A message!");
+  await waveTxn.wait(); // トランザクションが承認されるのを待つ（テスト:1回目）
+  const [_, randomPerson] = await hre.ethers.getSigners();
+  waveTxn = await waveContract.connect(randomPerson).wave("Another message!");
+  await waveTxn.wait(); // トランザクションが承認されるのを待つ（テスト:2回目）
+  let allWaves = await waveContract.getAllWaves();
+  console.log(allWaves);
+};
 const runMain = async () => {
   try {
     await main();
     process.exit(0);
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
     process.exit(1);
   }
 };
-
 runMain();
