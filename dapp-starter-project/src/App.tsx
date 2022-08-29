@@ -1,10 +1,15 @@
+import { ethers } from "ethers";
 import { useEffect, useState } from "react";
+import abi from "./utils/WavePortal.json";
 import "./App.css";
 
 function App() {
   // ユーザーのpublic wallet
   const [currentAccount, setCurrentAccount] = useState("");
   console.log("currentAccount: ", currentAccount);
+
+  const contractAddress = "0xE78A59f84f602065775D2725BB611F98029cF594";
+  const contractABI = abi.abi;
 
   /** window.ethereumにアクセス可能か確認 */
   const checkIfWalletIsConnected = async () => {
@@ -43,6 +48,37 @@ function App() {
     }
   };
 
+  /** waveの回数をカウント */
+  const wave = async () => {
+    try {
+      const { ethereum } = window;
+      if (ethereum) {
+        const provider = new ethers.providers.Web3Provider(ethereum);
+        const signer = provider.getSigner();
+        const wavePortalContract = new ethers.Contract(
+          contractAddress,
+          contractABI,
+          // signer(read & write) or provider(read only)
+          signer
+        );
+        let count = await wavePortalContract.getTotalWaves();
+        console.log("Retrieved total wave count...", Number(count._hex));
+        console.log("Signer:", signer);
+
+        const waveTxn = await wavePortalContract.wave();
+        console.log("Mining...", waveTxn.hash);
+        await waveTxn.wait();
+        console.log("Mined --", waveTxn.hash);
+        count = await wavePortalContract.getTotalWaves();
+        console.log("Retrieved total wave count...", Number(count._hex));
+      } else {
+        console.log("Ethereum object doesn't exist!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     checkIfWalletIsConnected();
   }, []);
@@ -68,7 +104,7 @@ function App() {
           </span>
         </div>
 
-        <button className="waveButton" onClick={() => null}>
+        <button className="waveButton" onClick={wave}>
           Wave at Me
         </button>
 
