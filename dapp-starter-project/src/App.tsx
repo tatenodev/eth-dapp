@@ -50,8 +50,7 @@ function App() {
   useEffect(() => {
     let wavePortalContract: ethers.Contract;
 
-    const onNewWave = (props: WaveProps) => {
-      const { waver, timestamp, message } = props;
+    const onNewWave = (waver: string, timestamp: any, message: string) => {
       console.log("NewWave", waver, timestamp, message);
       setAllWaves((prev) => [
         ...prev,
@@ -211,7 +210,7 @@ function App() {
                   }}
                 >
                   <div>Address: {wave.waver}</div>
-                  {/* <div>Time: {wave.timestamp._hex}</div> */}
+                  <div>timestamp: {JSON.stringify(wave.timestamp)}</div>
                   <div>Message: {wave.message}</div>
                 </div>
               );
