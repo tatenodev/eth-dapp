@@ -20,7 +20,7 @@ function App() {
   console.log("currentAccount: ", currentAccount);
   console.log("allWaves", allWaves);
 
-  const contractAddress = "0x129e3a25884c5495C0b0a8E09b9FD5c3B8F8681a";
+  const contractAddress = "0xa47d164718355d9443F06041E0A82C14AB220C3f";
   const contractABI = abi.abi;
 
   const getAllWaves = useCallback(async () => {
