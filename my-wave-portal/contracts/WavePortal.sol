@@ -5,8 +5,6 @@ import "hardhat/console.sol";
 
 contract WavePortal {
   uint256 totalWaves;
-
-  // 乱数生成のための基盤となるシード
   uint256 private seed;
 
   event NewWave(address indexed from, uint256 timestamp, string message);
@@ -18,6 +16,8 @@ contract WavePortal {
   }
 
   Wave[] waves;
+
+  mapping(address => uint256) public lastWaveAt;
   
   constructor() payable {
     console.log("WavePortal - Smart Contract!");
@@ -27,6 +27,10 @@ contract WavePortal {
   }
 
   function wave(string memory _message) public {
+    // 現在ユーザーがwaveを送信している時刻と、前回waveを送信した時刻が指定の間隔以上離れていることを確認。
+    require(lastWaveAt[msg.sender] + 30 seconds < block.timestamp, "Wait 15m");
+    lastWaveAt[msg.sender] = block.timestamp;
+    
     totalWaves += 1;
     console.log("%s waved w/ message %s", msg.sender, _message);
     waves.push(Wave(msg.sender, _message, block.timestamp));
